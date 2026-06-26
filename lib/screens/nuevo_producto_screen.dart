@@ -36,6 +36,16 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
       return;
     }
 
+    final nombre = _nombreCtrl.text.trim().toUpperCase();
+    final codigo = _codigoCtrl.text.trim().toUpperCase();
+    final precioVenta = Formato.parseMiles(_precioVentaCtrl.text).toDouble();
+    final precioCompra = _tipo == 'producto'
+        ? Formato.parseMiles(_precioCompraCtrl.text).toDouble()
+        : 0.0;
+    final stock = _tipo == 'producto'
+        ? Formato.parseMiles(_stockCtrl.text)
+        : -1;
+
     final existeNombre = await DbService.instance.existeNombreProducto(nombre);
     if (!mounted) return;
     if (existeNombre) {
@@ -75,7 +85,6 @@ class _NuevoProductoScreenState extends State<NuevoProductoScreen> {
     }
 
     if (!mounted) return;
-
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Producto guardado'),
         backgroundColor: Colors.green));

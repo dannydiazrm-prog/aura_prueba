@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
-import '../services/db_service.dart';
 
 class PerfilScreen extends StatefulWidget {
   const PerfilScreen({super.key});
@@ -15,7 +14,7 @@ class PerfilScreen extends StatefulWidget {
 
 class _PerfilScreenState extends State<PerfilScreen> {
   final _nombreCtrl = TextEditingController(text: nombreNegocio);
-  File? _logoActual = logoFile;
+  File? _logoActual;
   bool _guardandoNombre = false;
 
   static const List<Color> _coloresDisponibles = [
@@ -44,6 +43,20 @@ class _PerfilScreenState extends State<PerfilScreen> {
     Color(0xFF37474F),
     Color(0xFF263238),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarLogo();
+  }
+
+  Future<void> _cargarLogo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final logoPath = prefs.getString('logoPath');
+    if (logoPath != null && File(logoPath).existsSync()) {
+      setState(() => _logoActual = File(logoPath));
+    }
+  }
 
   Future<void> _cambiarLogo() async {
     final confirmar = await showDialog<bool>(
@@ -126,13 +139,12 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
     final dir = await getApplicationDocumentsDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-final destino = p.join(dir.path, 'logo_negocio_$timestamp.png');
-await File(picked.path).copy(destino);
+    final destino = p.join(dir.path, 'logo_negocio_$timestamp.png');
+    await File(picked.path).copy(destino);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('logoPath', destino);
-    logoFile = File(destino);
-    setState(() => _logoActual = logoFile);
-    if (mounted) DomisApp.reiniciar(context);
+    setState(() => _logoActual = File(destino));
+    if (mounted) AuraPruebaApp.reiniciar(context);
   }
 
   Future<void> _guardarNombre() async {
@@ -180,8 +192,7 @@ await File(picked.path).copy(destino);
                     ),
                   ),
                   const Text('Color de la app',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17)),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
                   const SizedBox(height: 4),
                   const Text('Elegí el color principal de tu negocio',
                       style: TextStyle(color: Colors.grey, fontSize: 13)),
@@ -236,8 +247,7 @@ await File(picked.path).copy(destino);
                       onPressed: () async {
                         primaryColor = colorSeleccionado;
                         final prefs = await SharedPreferences.getInstance();
-                        await prefs.setInt(
-                            'primaryColor', primaryColor.value);
+                        await prefs.setInt('primaryColor', primaryColor.value);
                         if (mounted) {
                           notificarCambio();
                           Navigator.pop(context);
@@ -297,7 +307,6 @@ await File(picked.path).copy(destino);
               ),
             ),
             const SizedBox(height: 24),
-
             const Text('Nombre del negocio',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
             const SizedBox(height: 8),
@@ -323,7 +332,6 @@ await File(picked.path).copy(destino);
               ),
             ),
             const SizedBox(height: 24),
-
             const Text('Colorimetría',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
             const SizedBox(height: 8),
