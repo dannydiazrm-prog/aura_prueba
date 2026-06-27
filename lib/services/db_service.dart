@@ -193,7 +193,12 @@ class DbService {
       {'dias': 18,  'cliente': clientes[2], 'items': [{'codigo': 'SRV001', 'cantidad': 1}, {'codigo': 'SRV003', 'cantidad': 1}]},
       {'dias': 12,  'cliente': clientes[3], 'items': [{'codigo': 'ALI001', 'cantidad': 1}, {'codigo': 'ALI002', 'cantidad': 2}]},
       {'dias': 6,   'cliente': clientes[4], 'items': [{'codigo': 'SRV001', 'cantidad': 1}, {'codigo': 'MED003', 'cantidad': 1}]},
-      {'dias': 2,   'cliente': clientes[5], 'items': [{'codigo': 'SRV004', 'cantidad': 1}]},
+{'dias': 5,   'cliente': clientes[5], 'items': [{'codigo': 'SRV004', 'cantidad': 1}]},
+{'dias': 4,   'cliente': clientes[6], 'items': [{'codigo': 'ALI001', 'cantidad': 1}, {'codigo': 'SRV002', 'cantidad': 1}]},
+{'dias': 3,   'cliente': clientes[7], 'items': [{'codigo': 'SRV003', 'cantidad': 1}, {'codigo': 'MED001', 'cantidad': 2}]},
+{'dias': 2,   'cliente': clientes[0], 'items': [{'codigo': 'SRV005', 'cantidad': 1}, {'codigo': 'ACC001', 'cantidad': 1}]},
+{'dias': 1,   'cliente': clientes[1], 'items': [{'codigo': 'SRV001', 'cantidad': 1}, {'codigo': 'ALI002', 'cantidad': 1}]},
+{'dias': 0,   'cliente': clientes[2], 'items': [{'codigo': 'SRV002', 'cantidad': 1}, {'codigo': 'MED002', 'cantidad': 1}]},
     ];
 
     for (final venta in ventasSemilla) {

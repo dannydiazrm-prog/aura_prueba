@@ -57,7 +57,7 @@ Future<bool> _pruebaExpirada() async {
   if (fechaStr == null) return false;
   final fecha = DateTime.tryParse(fechaStr);
   if (fecha == null) return false;
-  return DateTime.now().difference(fecha).inHours >= 24;
+  return DateTime.now().difference(fecha).inHours >= 3;
 }
 
 class AuraPruebaApp extends StatefulWidget {
