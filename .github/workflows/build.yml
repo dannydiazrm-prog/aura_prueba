@@ -9,17 +9,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
+
       - name: Get dependencies
         run: flutter pub get
+
+      - name: Generate launcher icons
+        run: flutter pub run flutter_launcher_icons
+
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/aura_prueba_key.jks
+
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.KEY_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=aura_prueba_key.jks" >> android/key.properties
+
       - name: Build release APK
         run: flutter build apk --release
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
@@ -30,23 +48,28 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
-      - name: Flutter Clean
-        run: flutter clean
-      - name: Habilitar Windows
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Enable Windows desktop
         run: flutter config --enable-windows-desktop
-      - name: Regenerar archivos
-        run: flutter create --platforms=windows .
+
       - name: Build Windows
         run: flutter build windows --release
-      - name: Instalar NSIS
+
+      - name: Install NSIS
         run: choco install nsis -y
-      - name: Generar instalador
+
+      - name: Build installer
         run: makensis installer.nsi
-      - name: Upload Installer
+
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: aura-windows-instalador
-          path: Instalador_Aura_Estandar.exe
+          name: aura-prueba-instalador
+          path: Instalador_Aura_Prueba.exe

@@ -1,8 +1,8 @@
 !include "MUI2.nsh"
 
-Name "Aura Estandar"
-OutFile "Instalador_Aura_Estandar.exe"
-InstallDir "$PROGRAMFILES\AuraEstandar"
+Name "Aura Demo"
+OutFile "Instalador_Aura_Prueba.exe"
+InstallDir "$PROGRAMFILES\AuraDemo"
 
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -13,11 +13,11 @@ Section "Instalar App"
     File "build\windows\x64\runner\Release\*.exe"
     File "build\windows\x64\runner\Release\*.dll"
     File /r "build\windows\x64\runner\Release\data"
-    CreateShortCut "$DESKTOP\Aura Estandar.lnk" "$INSTDIR\domis_estandar.exe"
+    CreateShortCut "$DESKTOP\Aura Demo.lnk" "$INSTDIR\aura_prueba.exe"
     WriteUninstaller "$INSTDIR\uninstall.exe"
 SectionEnd
 
 Section "Uninstall"
-    Delete "$DESKTOP\Aura Estandar.lnk"
+    Delete "$DESKTOP\Aura Demo.lnk"
     RMDir /r "$INSTDIR"
 SectionEnd
