@@ -52,7 +52,7 @@ jobs:
   # TRABAJO 2: COMPILAR WINDOWS Y CREAR EL INSTALADOR .EXE
   # =======================================================
   build-windows:
-    runs-on: windows-latest # <-- La magia: ahora corremos en una PC con Windows
+    runs-on: windows-2019
 
     steps:
       - uses: actions/checkout@v4
