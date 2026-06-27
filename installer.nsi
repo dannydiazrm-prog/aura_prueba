@@ -10,18 +10,10 @@ InstallDir "$PROGRAMFILES\AuraEstandar"
 
 Section "Instalar App"
     SetOutPath "$INSTDIR"
-    
-    # Copiamos el ejecutable y las librerías DLL usando barras de Windows (\)
-    File "build\windows\x64\runner\Release\domis_estandar.exe"
+    File "build\windows\x64\runner\Release\*.exe"
     File "build\windows\x64\runner\Release\*.dll"
-    
-    # Copiamos la carpeta data entera de forma recursiva
     File /r "build\windows\x64\runner\Release\data"
-
-    # Acceso directo en el escritorio
     CreateShortCut "$DESKTOP\Aura Estandar.lnk" "$INSTDIR\domis_estandar.exe"
-    
-    # Desinstalador
     WriteUninstaller "$INSTDIR\uninstall.exe"
 SectionEnd
 

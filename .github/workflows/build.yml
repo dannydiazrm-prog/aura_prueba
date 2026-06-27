@@ -5,79 +5,47 @@ on:
     branches: [ master ]
 
 jobs:
-  # =======================================================
-  # TRABAJO 1: COMPILAR EL APK (Android)
-  # =======================================================
   build-apk:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
-
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
-
       - name: Get dependencies
         run: flutter pub get
-
-      - name: Generate launcher icons
-        run: flutter pub run flutter_launcher_icons
-
-      - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/aura_prueba_key.jks
-
-      - name: Create key.properties
-        run: |
-          echo "storePassword=${{ secrets.KEY_PASSWORD }}" > android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=aura_prueba_key.jks" >> android/key.properties
-
       - name: Build release APK
         run: flutter build apk --release
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: aura-prueba-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-  # =======================================================
-  # TRABAJO 2: COMPILAR WINDOWS Y CREAR INSTALADOR .EXE
-  # =======================================================
   build-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
-
-      - name: Habilitar Windows Desktop
+      - name: Flutter Clean
+        run: flutter clean
+      - name: Habilitar Windows
         run: flutter config --enable-windows-desktop
-
-      - name: Reparar archivos viejos de Windows
+      - name: Regenerar archivos
         run: flutter create --platforms=windows .
-
-      - name: Obtener dependencias
-        run: flutter pub get
-
-      - name: Compilar Windows
+      - name: Build Windows
         run: flutter build windows --release
-
-      - name: Instalar NSIS en el servidor Windows
+      - name: Instalar NSIS
         run: choco install nsis -y
-
-      - name: Generar el instalador con NSIS
+      - name: Generar instalador
         run: makensis installer.nsi
-
-      - name: Upload Windows Installer
+      - name: Upload Installer
         uses: actions/upload-artifact@v4
         with:
           name: aura-windows-instalador
