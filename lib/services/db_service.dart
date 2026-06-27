@@ -205,7 +205,8 @@ class DbService {
       for (final item in venta['items'] as List) {
         final codigo = item['codigo'] as String;
         final cantidad = item['cantidad'] as int;
-        final prod = productos.firstWhere((p) => p['codigo'] == codigo);
+        final prod = productos.firstWhere((p) => p['codigo'] == codigo, orElse: () => {});
+        if (prod.isEmpty) continue;
         final precio = prod['precio_venta'] as double;
         final costo = prod['precio_compra'] as double;
         total += precio * cantidad;
@@ -301,8 +302,11 @@ class DbService {
   }
 
   Future<int> contarNuevos(String tabla) async {
+    final meta = await db.query('demo_meta',
+        where: 'clave = ?', whereArgs: ['max_id_$tabla']);
+    final maxId = meta.isEmpty ? 0 : int.tryParse(meta.first['valor'] as String) ?? 0;
     final result = await db.rawQuery(
-        'SELECT COUNT(*) FROM $tabla WHERE id > (SELECT COALESCE(MAX(id_semilla), 0) FROM demo_meta WHERE clave = "max_id_$tabla")');
+        'SELECT COUNT(*) FROM $tabla WHERE id > ?', [maxId]);
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
