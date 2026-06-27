@@ -5,6 +5,9 @@ on:
     branches: [ master ]
 
 jobs:
+  # =======================================================
+  # TRABAJO 1: COMPILAR EL APK (Tu código original intacto)
+  # =======================================================
   build-apk:
     runs-on: ubuntu-latest
 
@@ -44,3 +47,39 @@ jobs:
         with:
           name: aura-prueba-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+  # =======================================================
+  # TRABAJO 2: COMPILAR WINDOWS Y CREAR EL INSTALADOR .EXE
+  # =======================================================
+  build-windows:
+    runs-on: windows-latest # <-- La magia: ahora corremos en una PC con Windows
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+
+      - name: Habilitar Windows Desktop (por si acaso)
+        run: flutter config --enable-windows-desktop
+
+      - name: Obtener dependencias
+        run: flutter pub get
+
+      - name: Compilar Windows
+        run: flutter build windows --release
+
+      - name: Instalar NSIS en el servidor Windows
+        # En Windows usamos choco (Chocolatey) en vez de apt-get
+        run: choco install nsis 
+
+      - name: Generar el instalador con NSIS
+        run: makensis installer.nsi
+
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-windows-instalador
+          # Subimos únicamente el instalador final
+          path: Instalador_Aura_Estandar.exe 
