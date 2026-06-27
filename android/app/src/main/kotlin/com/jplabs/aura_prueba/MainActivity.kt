@@ -1,4 +1,4 @@
-package com.jplabs.aura_prueba.aura_prueba
+package com.jplabs.aura_prueba
 
 import io.flutter.embedding.android.FlutterActivity
 
