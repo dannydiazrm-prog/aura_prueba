@@ -24,6 +24,7 @@ class _AjusteStockScreenState extends State<AjusteStockScreen>
   bool _guardandoCorreccion = false;
   bool _guardandoPerdida = false;
 
+
   final List<String> _motivos = ['Rotura', 'Vencimiento', 'Robo', 'Otro'];
 
   @override
